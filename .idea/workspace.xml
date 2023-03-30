@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b72f4956-9d52-46e3-ba55-4c178362a3e7" name="Changes" comment="" />
+    <list default="true" id="b72f4956-9d52-46e3-ba55-4c178362a3e7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/endpoints/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/endpoints/users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests_users.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests_users.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +20,9 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -31,7 +38,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python tests.Python tests for tests_todos.test_get_todos">
+  <component name="RunManager" selected="Python tests.Python tests for tests_users.test_get_user">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="GoRestApiProject" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -51,34 +58,6 @@
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for tests_comments.test_get_comments" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="GoRestApiProject" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;tests_comments.test_get_comments&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for tests_comments.test_get_comments_by_id" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="GoRestApiProject" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;tests_comments.test_get_comments_by_id&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <configuration name="Python tests for tests_posts.test_get_posts" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
@@ -109,6 +88,34 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for tests_users.test_get_user" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="GoRestApiProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests_users.test_get_user&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for tests_users.test_get_user_by_id" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="GoRestApiProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests_users.test_get_user_by_id&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <configuration name="Python tests for tests_users.test_get_users" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="GoRestApiProject" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -125,11 +132,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for tests_users.test_get_user" />
+        <item itemvalue="Python tests.Python tests for tests_users.test_get_user_by_id" />
         <item itemvalue="Python tests.Python tests for tests_todos.test_get_todos" />
         <item itemvalue="Python tests.Python tests for tests_posts.test_get_posts" />
         <item itemvalue="Python tests.Python tests for tests_users.test_get_users" />
-        <item itemvalue="Python tests.Python tests for tests_comments.test_get_comments_by_id" />
-        <item itemvalue="Python tests.Python tests for tests_comments.test_get_comments" />
       </list>
     </recent_temporary>
   </component>
