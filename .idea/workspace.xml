@@ -4,23 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b72f4956-9d52-46e3-ba55-4c178362a3e7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/GoRestApiProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GoRestApiProject.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="b72f4956-9d52-46e3-ba55-4c178362a3e7" name="Changes" comment="API project">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/base_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/base_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/endpoints/comments.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/endpoints/posts.py" beforeDir="false" afterPath="$PROJECT_DIR$/endpoints/posts.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/endpoints/todos.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/endpoints/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/endpoints/users.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests_comments.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests_posts.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests_posts.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests_todos.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests_users.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests_users.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/jsonmodels/comments_json.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/jsonmodels/posts_json.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/jsonmodels/posts_json.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/jsonmodels/todos_json.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,6 +159,14 @@
       <option name="presentableId" value="Default" />
       <updated>1680027922713</updated>
     </task>
+    <task id="LOCAL-00001" summary="API project">
+      <created>1680452667424</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1680452667424</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -186,6 +179,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="API project" />
+    <option name="LAST_COMMIT_MESSAGE" value="API project" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
