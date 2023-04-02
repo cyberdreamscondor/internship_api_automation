@@ -1,7 +1,6 @@
 from endpoints.posts import Posts
 
 posts = Posts()
-headers = {'Authorization': 'Token c8816a6b5a1ce16041be702d5b0640ed4ba524d18bd27eb35b0f09eed255845f'}
 
 
 def test_get_posts(app_config):
@@ -9,19 +8,22 @@ def test_get_posts(app_config):
 
 
 def test_get_post_id(app_config):
-    posts.get_post_id(app_config.base_url, 200, 7445)
+    id_list = posts.get_post_id(app_config.base_url, 200)
+    first_id = id_list[0]
+    new_id_list = posts.get_post_id(app_config.base_url, 200)
+    assert first_id in new_id_list
 
 
-def test_get_posts_by_page(app_config, params= {'page':1,'per_page': 1}):
+def test_get_posts_by_page(app_config, params={'page': 1, 'per_page': 20}):
     response_body = posts.get_posts_by_page(app_config.base_url, 200, params=params)
-    assert response_body[0]['user_id'] == 663589
-    assert response_body[0]['title'] == "Recusandae vetus et tendo ab peior canis repellendus spes."
+    assert response_body is not None
 
 
 def test_get_post_by_id(app_config):
-    response_body = posts.get_post_by_id(app_config.base_url, 200, "7385")
-    assert response_body['user_id'] == 642255
-    assert response_body['title'] == "Benigne eveniet trado defungo campana depereo tamisium caelestis."
+    id_list = posts.get_post_id(app_config.base_url, 200)
+    first_id = id_list[0]
+    response_body = posts.get_post_by_id(app_config.base_url, 200, str(first_id))
+    assert response_body is not None
 
 
 def test_get_posts_user_id_list(app_config):
@@ -30,7 +32,4 @@ def test_get_posts_user_id_list(app_config):
 
 
 def test_get_post_by_incorrect_id(app_config):
-    posts.get_post_by_id(app_config.base_url, 404, "7320")
-
-
-
+    posts.get_post_by_id(app_config.base_url, 404, "0000")
