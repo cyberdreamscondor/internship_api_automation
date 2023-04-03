@@ -14,7 +14,7 @@ def test_get_post_id(app_config):
     assert first_id in new_id_list
 
 
-def test_get_posts_by_page(app_config, params={'page': 1, 'per_page': 20}):
+def test_get_posts_by_page(app_config, params={'page': 1, 'per_page': 1}):
     response_body = posts.get_posts_by_page(app_config.base_url, 200, params=params)
     assert response_body is not None
 
