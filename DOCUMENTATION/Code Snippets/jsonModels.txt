@@ -1,0 +1,23 @@
+
+#pip install jsonmodel
+
+import json
+from jsonmodel.validators import jsonModel
+
+schema = {
+	"type": "object",
+	"properties": {
+		"name": {"type": "string"},
+		"age": {"type": "integer"}
+	}
+}
+
+
+data = {
+	"name": "David"
+	"age": 30
+}
+
+
+
+assert jsonModel(data, schema=schema)
