@@ -1,0 +1,42 @@
+*** Authentication ***
+
+
+headers = {
+    "Authorization": "Bearer <token>"
+}
+
+response = requests.post(url, headers=headers)
+
+
+
+It is impossible to obtain an access token not being logged into the system.
+
+
+After getting the token for the first time it is possible to sniff request url in order
+to be able to refresh and get a new token without visiting goRest website.
+Makes no sense because token is valid for a substantial amount of time.
+
+********
+Refresh Example:
+
+URL: https://gorest.co.in/my-account/access-tokens/86767/refresh 
+# where 86767 is probably unique id for particular user
+
+Method: POST
+
+Body: {
+  "authenticity_token": "miR9CAFT32-_Z3qxE4vk8pABqcdMMdMj3sxwawLL5WB1xPj3ddQmGDodP2Z-582asZBV_pL4Zy3Br3NdRrbUeA"
+}
+
+
+Response is a webpage with <td> containing token
+
+********
+
+
+
+
+
+
+
+
