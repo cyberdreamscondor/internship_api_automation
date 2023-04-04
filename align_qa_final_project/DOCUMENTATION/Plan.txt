@@ -1,8 +1,0 @@
-
-1) implement framework
-2) prepare a checklists
-3) investigate API, produce final version of the checklist
-4) revisit framework
-5) implement test functions
-6) add reporting
-7) final testing
