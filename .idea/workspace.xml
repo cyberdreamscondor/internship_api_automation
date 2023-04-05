@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b72f4956-9d52-46e3-ba55-4c178362a3e7" name="Changes" comment="API project">
-      <change beforePath="$PROJECT_DIR$/.idea/GoRestApiProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GoRestApiProject.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DOCUMENTATION/Code Snippets/parsing.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/base_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/base_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/endpoints/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/endpoints/users.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests_users.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
