@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b72f4956-9d52-46e3-ba55-4c178362a3e7" name="Changes" comment="API project">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/base_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/base_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/endpoints/posts.py" beforeDir="false" afterPath="$PROJECT_DIR$/endpoints/posts.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/endpoints/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/endpoints/users.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests_posts.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests_posts.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests_users.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests_users.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/jsonmodels/posts_json.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/jsonmodels/posts_json.py" afterDir="false" />
-    </list>
+    <list default="true" id="b72f4956-9d52-46e3-ba55-4c178362a3e7" name="Changes" comment="API project" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,6 +18,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="origin/develop" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -151,9 +146,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python tests.Python tests for tests_posts.test_user_id_in_list" />
-        <item itemvalue="Python tests.Python tests for tests_posts.test_get_post_body" />
-        <item itemvalue="Python tests.Python tests for tests_posts.test_get_post_title" />
         <item itemvalue="Python tests.Python tests for tests_posts.test_get_user_id" />
+        <item itemvalue="Python tests.Python tests for tests_posts.test_get_post_title" />
+        <item itemvalue="Python tests.Python tests for tests_posts.test_get_post_body" />
         <item itemvalue="Python tests.Python tests for tests_posts.test_delete_post" />
       </list>
     </recent_temporary>
