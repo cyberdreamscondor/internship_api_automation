@@ -5,7 +5,7 @@ import jsonpath as jsn
 
 class BaseApi:
 
-    def get_request(self, url, params=None, headers=None):
+    def get_request(self, url, headers, params=None):
         """
         Use this method to send the get request
         :param url: The request URL
@@ -20,6 +20,7 @@ class BaseApi:
     def post_request(self, url, json_data, headers):
         """
         Use this method to send the get request
+        :param headers:
         :param url: The request URL
         :param json_data: The request json
         :return: response
@@ -30,6 +31,7 @@ class BaseApi:
     def put_request(self, url, json_data, headers):
         """
         Use this method to send the put request
+        :param headers:
         :param url: The request URL
         :param json_data: The request json data
         param headers: The request headers(OPTIONAL)
@@ -39,15 +41,14 @@ class BaseApi:
         return response
 
 
-    def delete_request(self, url, json_data, headers):
+    def delete_request(self, url, headers):
         """
         Use this method to send the DELETE request
         :param url: The request URL
-        :param json_data: The request json data
         :param headers:The request headers(OPTIONAL)
         :return: response
         """
-        response = requests.delete(url, json=json_data, headers=headers, verify=False)
+        response = requests.delete(url, headers=headers, verify=False)
         return response
 
     def check_status_code(self, response, expected_status_code):
@@ -69,3 +70,6 @@ class BaseApi:
         for val in values_list:
             if val == expected_value:
                 return val
+
+    def check_posts_data_by_length(self, data, length):
+        assert len(data) == length
