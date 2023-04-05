@@ -17,7 +17,7 @@ class BaseApi:
         response = requests.get(url, params=params, headers=headers, verify=False)
         return response
 
-    def post_request(self, url, json_data, headers):
+    def post_request(self, url, json_data, headers=None):
         """
         Use this method to send the get request
         :param url: The request URL
@@ -27,7 +27,7 @@ class BaseApi:
         response = requests.post(url, json_data, headers=headers, verify=False)
         return response
 
-    def put_request(self, url, json_data, headers):
+    def put_request(self, url, json_data, headers=None):
         """
         Use this method to send the put request
         :param url: The request URL
@@ -39,7 +39,7 @@ class BaseApi:
         return response
 
 
-    def delete_request(self, url, json_data, headers):
+    def delete_request(self, url, headers=None):
         """
         Use this method to send the DELETE request
         :param url: The request URL
@@ -47,7 +47,7 @@ class BaseApi:
         :param headers:The request headers(OPTIONAL)
         :return: response
         """
-        response = requests.delete(url, json=json_data, headers=headers, verify=False)
+        response = requests.delete(url, headers=headers, verify=False)
         return response
 
     def check_status_code(self, response, expected_status_code):

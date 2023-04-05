@@ -1,0 +1,21 @@
+from jsonpath import parse
+
+assert parse("$.goods[contains(@.category, $.targetCategory)]").find(data) == [
+    {"price": 100, "category": "Comic book"}
+]
+
+################################
+
+data = {
+    "books": [
+        {"title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "year": 1925},
+        {"title": "To Kill a Mockingbird", "author": "Harper Lee", "year": 1960},
+        {"title": "1984", "author": "George Orwell", "year": 1949},
+        {"title": "Pride and Prejudice", "author": "Jane Austen", "year": 1813},
+        {"title": "The Catcher in the Rye", "author": "J.D. Salinger", "year": 1951}
+    ]
+}
+
+expression = parse("$.books[?(@.year > 1950)].title")
+matches = [match.value for match in expression.find(data)]
+
