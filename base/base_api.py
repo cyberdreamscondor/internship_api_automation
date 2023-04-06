@@ -10,45 +10,47 @@ class BaseApi:
         Use this method to send the get request
         :param url: The request URL
         :param params: The request params(OPTIONAL)
-        :param headers: The request headers (OPTIONAL)
+        :param headers: The request headers
         :return: response
         """
 
         response = requests.get(url, params=params, headers=headers, verify=False)
         return response
 
-    def post_request(self, url, json_data, headers):
+    def post_request(self, url, json_data, headers, params=None):
         """
         Use this method to send the get request
-        :param headers:
+        :param params: The request params(OPTIONAL)
         :param url: The request URL
-        :param json_data: The request json
+        :param json_data: The request json_data
+        :param headers:the request headers
         :return: response
         """
-        response = requests.post(url, json_data, headers=headers, verify=False)
+        response = requests.post(url, json_data, params=params, headers=headers, verify=False)
         return response
 
-    def put_request(self, url, json_data, headers):
+    def put_request(self, url, json_data, headers, params=None):
         """
         Use this method to send the put request
-        :param headers:
+        :param params: The request params(OPTIONAL)
+        :param headers: The request headers
         :param url: The request URL
         :param json_data: The request json data
-        param headers: The request headers(OPTIONAL)
+        param headers: The request headers
         :return: response
         """
-        response = requests.put(url, json_data, headers=headers, verify=False)
+        response = requests.put(url, json_data, params=params, headers=headers, verify=False)
         return response
 
-
-    def delete_request(self, url, headers):
+    def delete_request(self, url, headers, params=None):
         """
         Use this method to send the DELETE request
+        :param params: The request params(OPTIONAL)
         :param url: The request URL
-        :param headers:The request headers(OPTIONAL)
+        :param headers:The request headers
         :return: response
         """
-        response = requests.delete(url, headers=headers, verify=False)
+        response = requests.delete(url, params=params, headers=headers, verify=False)
         return response
 
     def check_status_code(self, response, expected_status_code):
@@ -66,10 +68,3 @@ class BaseApi:
         values_in_json = jsn.jsonpath(json_data, key)
         return values_in_json
 
-    def get_value_from_list(self, values_list, expected_value):
-        for val in values_list:
-            if val == expected_value:
-                return val
-
-    def check_posts_data_by_length(self, data, length):
-        assert len(data) == length

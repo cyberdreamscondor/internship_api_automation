@@ -11,7 +11,7 @@ def test_get_posts(app_config):
 
 
 def test_get_user_id(app_config):
-    user_id = "751559"
+    user_id = "781185"
     json = posts_json.create_post_json(int(user_id), "New project", "New post")
     posts.create_post(app_config.base_url, json)
     response_body = posts.get_post_data(app_config.base_url, 200, user_id)
@@ -32,7 +32,7 @@ def test_get_post_title(app_config):
 
 
 def test_get_post_body(app_config):
-    user_id = "745459"
+    user_id = "781186"
     body = "New body"
     json = posts_json.create_post_json(int(user_id), "The best title", body)
     posts.create_post(app_config.base_url, json)
@@ -51,3 +51,21 @@ def test_user_id_in_list(app_config):
     response_body = posts.get_post_data(app_config.base_url, 200, user_id)
     post_id = response_body[0]['id']
     posts.delete_user_post(app_config.base_url, str(post_id))
+
+
+#DELETE REQUESTS
+
+
+def test_delete_user_post(app_config):
+    user_id = "755559"
+    json = posts_json.create_post_json(int(user_id), "New project", "New post")
+    posts.create_post(app_config.base_url, json)
+    response_body = posts.get_post_data(app_config.base_url, 200, user_id)
+    assert response_body[0]['user_id'] == int(user_id)
+    post_id = response_body[0]['id']
+    posts.delete_user_post(app_config.base_url, str(post_id))
+    new_user_id_list = posts.get_post_user_id(app_config.base_url, 200)
+    assert post_id not in new_user_id_list
+
+
+
