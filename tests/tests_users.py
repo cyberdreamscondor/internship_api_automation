@@ -2,44 +2,75 @@ import pytest
 import json
 from endpoints.users import Users
 import utils.jsonmodels.users_json as mock_data
-from jsonmodel.validators import jsonModel
+import jsonschema
 import requests
 
 
 class UsersTests(Users):
-    schema = {
-        "type": "object",
-        "properties": {
-            "name": {"type": "string"},
-            "email": {"type": "string"},
-            "gender": {"type": "string"},
-            "status": {"type": "string"}
-        },
-        "required": ["name", "email", "gender", "status"]
-    }
+    schema = mock_data.get_user_json_schema()
 
     def test_create_user(self, app_config):
+        mock_data.delete_mock_data(app_config)
         user_data = mock_data.create_users_data()
-        # mock data being deleted before POSTed again
-        with open('..utils/jsonmodels/mock_users_ids.json', 'r') as file:
-            user_ids = json.load(file)["user_ids"]
-
-
-        url = "https://gorest.co.in/public/v2/users"
-        for user_id in user_ids:
-            response = requests.delete(f"{url}/{user_id}")
-
         for user in user_data:
-            user_json = json.dumps(user)
+            user_json = json.dumps(user)  # replaces single quotes with double ones
+            user_json = json.loads(user_json)
+
             response = self.create_user(app_config.base_url, user_json, 201, app_config.token)
-            # creating an id list for POSTed users
-            response_data = json.loads(response.text)
-            extracted_id = response_data["id"]
+            mock_data.store_response_ids(response)
 
-            with open('..utils/jsonmodels/mock_users_ids.json', 'w') as file:
-                json.dump({"user_ids": [extracted_id]}, file)
+            assert jsonschema.validate(response.json(), self.schema) is None
 
-            assert jsonModel(response, schema=self.schema)
+    def test_get_user(self, app_config):
+        id_list = mock_data.get_mock_user_ids()
+
+        for user_id in id_list:
+            response = self.get_user(app_config.base_url, user_id, 200, app_config.token)
+            assert jsonschema.validate(response.json(), self.schema) is None
+
+    def test_pagination(self, app_config):
+        response = self.get_users(app_config.base_url, 200, app_config.token)
+        page1 = self.get_users(app_config.base_url, 200, app_config.token, page=1, limit=5)
+        page2 = self.get_users(app_config.base_url, 200, app_config.token, page=2, limit=5)
+        response_data = response.json()
+        page1_users = page1.json()
+        page2_users = page2.json()
+        assert len(page1_users) == len(page2_users) and\
+            len(response_data) == len(page1_users) + len(page2_users)
+        assert page1_users.update(page2_users) == response_data
+
+    def test_update_user(self, app_config):
+        id_list = mock_data.get_mock_user_ids()
+        user_id = id_list[0]
+        user_data = self.get_user(app_config.base_url, user_id, 200, app_config.token).json()
+        user_data["email"] = "updated@email.com"
+        update_response = self.update_user(app_config.base_url, user_id, user_data, 200, app_config.token)
+        assert update_response.json()["email"] == "updated@email.com"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

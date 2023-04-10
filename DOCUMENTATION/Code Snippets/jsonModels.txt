@@ -5,11 +5,16 @@ import json
 from jsonmodel.validators import jsonModel
 
 schema = {
-	"type": "object",
-	"properties": {
-		"name": {"type": "string"},
-		"age": {"type": "integer"}
-	}
+    "schema": {
+        "type": "object",
+        "properties": {
+            "name": {"type": "string"},
+            "email": {"type": "string"},
+            "gender": {"type": "string"},
+            "status": {"type": "string"}
+        },
+        "required": ["name", "email", "gender", "status"]
+    }
 }
 
 
@@ -19,5 +24,5 @@ data = {
 }
 
 
-
-assert jsonModel(data, schema=schema)
+validator = jsonModel()
+assert validator.validate(data, schema=self.schema)
