@@ -5,10 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b72f4956-9d52-46e3-ba55-4c178362a3e7" name="Changes" comment="API project">
-      <change afterPath="$PROJECT_DIR$/DOCUMENTATION/Code Snippets/parsing.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/base_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/base_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DOCUMENTATION/CheckLists/~$ers Checklist.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DOCUMENTATION/Code Snippets/jsonModels.txt" beforeDir="false" afterPath="$PROJECT_DIR$/DOCUMENTATION/Code Snippets/jsonModels.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/endpoints/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/endpoints/users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests_users.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests_users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/jsonmodels/mock_users_ids.json" beforeDir="false" afterPath="$PROJECT_DIR$/utils/jsonmodels/mock_users_ids.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/jsonmodels/users_data.json" beforeDir="false" afterPath="$PROJECT_DIR$/utils/jsonmodels/users_data.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/jsonmodels/users_json.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/jsonmodels/users_json.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,10 +46,15 @@
     "git-widget-placeholder": "hamasik",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/user/Desktop/ACA/homework/Homework",
-    "settings.editor.selected.configurable": "inlay.hints"
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
-  <component name="RunManager" selected="Python tests.Python tests for tests_posts.test_get_posts_by_page">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Repos\internship_api_automation\utils\jsonmodels" />
+    </key>
+  </component>
+  <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="GoRestApiProject" />
       <option name="INTERPRETER_OPTIONS" value="" />

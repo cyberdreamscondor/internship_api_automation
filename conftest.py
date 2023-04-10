@@ -1,4 +1,4 @@
-from pytest import fixture
+import pytest
 from config import Config
 
 
@@ -11,12 +11,13 @@ def pytest_addoption(parser):
     )
 
 
-@fixture(scope='session')
+@pytest.fixture(scope='session')
 def env(request):
     return request.config.getoption("--env")
 
 
-@fixture(scope='session')
+@pytest.fixture(scope='session')
 def app_config(env):
     conf = Config(env)
     return conf
+
