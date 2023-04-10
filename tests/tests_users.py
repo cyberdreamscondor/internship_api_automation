@@ -3,7 +3,7 @@ import json
 from endpoints.users import Users
 import utils.jsonmodels.users_json as mock_data
 import jsonschema
-import requests
+
 
 
 class UsersTests(Users):
@@ -46,6 +46,22 @@ class UsersTests(Users):
         user_data["email"] = "updated@email.com"
         update_response = self.update_user(app_config.base_url, user_id, user_data, 200, app_config.token)
         assert update_response.json()["email"] == "updated@email.com"
+
+    def test_invalid_create_user(self, app_config):
+        invalid_data = {
+            "email": "test_12wdf@testdsf.com",
+            "name": "5",
+            "gender": "female",
+            "status": "active"
+        }
+
+        # There's no such message, let us suppose it has to be
+        expected_response = [{
+            "field": "name",
+            "message": "can't be a number"
+        }]
+        response = self.create_user(app_config.base_url, invalid_data, 422, app_config.token)
+        assert expected_response == response.json()
 
 
 
