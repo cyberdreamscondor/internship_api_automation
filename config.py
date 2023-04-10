@@ -7,3 +7,4 @@ class Config:
         self.app_port = {
             'local': ":80"
         }[env]
+
