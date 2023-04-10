@@ -5,23 +5,32 @@ import utils.jsonmodels.users_json as mock_data
 import jsonschema
 
 
-
 class UsersTests(Users):
-    schema = mock_data.get_user_json_schema()
+    schema = mock_data.get_user_json_schema() # get schema of a correct user record returned by server
 
     def test_create_user(self, app_config):
+        """
+        This particular public API functions in a way that introduces some unexpected bugs.
+        In order to mitigate the pain :)
+        ! Each test-run first deletes mock data if any present,
+        POST it to the server again.
+        ! Third parties are allowed to change and repost our data that sometimes lead to failures.
+        """
         mock_data.delete_mock_data(app_config)
-        user_data = mock_data.create_users_data()
+        user_data = mock_data.create_users_data() # get mock data from a file
         for user in user_data:
             user_json = json.dumps(user)  # replaces single quotes with double ones
-            user_json = json.loads(user_json)
+            user_json = json.loads(user_json)  # probably no longer relevant. Recheck, delete if so.
 
             response = self.create_user(app_config.base_url, user_json, 201, app_config.token)
-            mock_data.store_response_ids(response)
+            mock_data.store_response_ids(response) # writes users' records ids from response to the file
 
             assert jsonschema.validate(response.json(), self.schema) is None
 
     def test_get_user(self, app_config):
+        """
+        Gets all mock users and validates response json schema.
+        """
         id_list = mock_data.get_mock_user_ids()
 
         for user_id in id_list:
@@ -29,6 +38,12 @@ class UsersTests(Users):
             assert jsonschema.validate(response.json(), self.schema) is None
 
     def test_pagination(self, app_config):
+        """
+        Set a limit of 5 records per page. API default is 10.
+        Checks 2 pages of user records to contain exactly 5 records
+        and that a default page of 10 records' data doesn't differ from
+        these 2 pages.
+        """
         response = self.get_users(app_config.base_url, 200, app_config.token)
         page1 = self.get_users(app_config.base_url, 200, app_config.token, page=1, limit=5)
         page2 = self.get_users(app_config.base_url, 200, app_config.token, page=2, limit=5)
@@ -40,6 +55,11 @@ class UsersTests(Users):
         assert page1_users.update(page2_users) == response_data
 
     def test_update_user(self, app_config):
+        """
+        Gets user record ids form the file. For the sake of learning project speed selects 1 record only.
+        Updates email, PUTs to the server.
+        Checks response to contain updated email.
+        """
         id_list = mock_data.get_mock_user_ids()
         user_id = id_list[0]
         user_data = self.get_user(app_config.base_url, user_id, 200, app_config.token).json()
@@ -48,6 +68,10 @@ class UsersTests(Users):
         assert update_response.json()["email"] == "updated@email.com"
 
     def test_invalid_create_user(self, app_config):
+        """
+        POST user with invalid data.
+        Simple actual/expected response comparison.
+        """
         invalid_data = {
             "email": "test_12wdf@testdsf.com",
             "name": "5",

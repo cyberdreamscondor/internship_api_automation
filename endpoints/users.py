@@ -6,6 +6,10 @@ class Users(BaseApi):
     endpoint = "public/v2/users/"
 
     def get_users(self, url,  expected_status_code, headers=None, page=None, limit=None):
+        """
+        Get the whole user list. Use 'limit' to set records number per page and 'page'
+        to view a desired one.
+        """
         params = {}
         if page is not None:
             params["page"] = page

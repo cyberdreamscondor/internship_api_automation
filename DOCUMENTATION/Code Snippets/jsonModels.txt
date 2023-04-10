@@ -1,8 +1,7 @@
 
-#pip install jsonmodel
-
+import jsonschema
 import json
-from jsonmodel.validators import jsonModel
+
 
 schema = {
     "schema": {
@@ -23,6 +22,4 @@ data = {
 	"age": 30
 }
 
-
-validator = jsonModel()
-assert validator.validate(data, schema=self.schema)
+ assert jsonschema.validate(data, self.schema) is None

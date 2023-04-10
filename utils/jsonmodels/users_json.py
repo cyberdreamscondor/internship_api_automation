@@ -1,14 +1,25 @@
 import json
 import requests
 
+# Helper functions to fetch mock data to test functions, delete, store response records' ids &
+# retrieve it, provide json schema of a correct response.
+
 
 def create_users_data():
+    """
+    Returns users mock data loaded from a file
+    """
     with open('../utils/jsonmodels/users_data.json', 'r') as file:
         users_data = json.load(file)
         return users_data
 
 
 def delete_mock_data(app_config):
+    """
+    Attempts to delete user records by ids found in the file.
+    (These ids are stored at the time mock data is POSTed to the server that
+    provides id for each record on his own.)
+    """
     url = "https://gorest.co.in/public/v2/users"
     with open('../utils/jsonmodels/mock_users_ids.json', 'r') as file:
         file_contents = file.read()
@@ -22,6 +33,9 @@ def delete_mock_data(app_config):
 
 
 def store_response_ids(response):
+    """
+    Writes to file POSTed users' ids provided by the server in the response.
+    """
     with open('../utils/jsonmodels/mock_users_ids.json', 'r+') as file:
         file_contents = file.read()
         data = {"user_ids": []}
@@ -35,6 +49,7 @@ def store_response_ids(response):
 
 
 def get_mock_user_ids():
+    """Returns a list of all ids stored in the file"""
     with open('../utils/jsonmodels/mock_users_ids.json', 'r+') as file:
         file_contents = file.read()
         data = {"user_ids": []} # just in case file is empty
@@ -43,6 +58,10 @@ def get_mock_user_ids():
 
 
 def get_user_json_schema():
+    """
+    Schema of the correct response user record
+    id is provided by the server
+    """
     schema = {
         "type": "object",
         "properties": {
