@@ -2,7 +2,7 @@ from base.base_api import BaseApi
 
 
 class Users(BaseApi):
-    endpoint = "/public/v2/users/"
+    endpoint = "public/v2/users/"
 
     def get_users(self, url,  expected_status_code, headers=None):
         response = self.get_request(url+self.endpoint, headers=headers)
