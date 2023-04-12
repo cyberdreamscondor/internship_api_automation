@@ -1,3 +1,5 @@
+import requests
+
 from base.base_api import BaseApi
 
 get_posts_endpoint = "/public/v2/posts"
@@ -24,15 +26,15 @@ class Posts(BaseApi):
         self.check_status_code(response, expected_status_code)
         return response.json()
 
-    def create_post(self, url, json):
+    def create_post(self, url, expected_status_code, json):
         response = self.post_request(url + get_posts_endpoint, json, headers)
-        self.check_status_code(response, 201)
+        self.check_status_code(response, expected_status_code)
 
-    def update_user(self, url, json, post_id):
+    def update_user(self, url, expected_status_code, json, post_id):
         response = self.put_request(url + get_post_by_id + post_id, json, headers)
-        self.check_status_code(response, 200)
+        self.check_status_code(response, expected_status_code)
 
-    def delete_user_post(self, url, post_id):
+    def delete_user_post(self, url, expected_status_code, post_id):
         response = self.delete_request(url + get_post_by_id + post_id, headers)
-        self.check_status_code(response, 204)
+        self.check_status_code(response, expected_status_code)
 

@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b72f4956-9d52-46e3-ba55-4c178362a3e7" name="Changes" comment="API project">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/base_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/base_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/endpoints/posts.py" beforeDir="false" afterPath="$PROJECT_DIR$/endpoints/posts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/tests_posts.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests_posts.py" afterDir="false" />
     </list>
@@ -150,11 +149,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for tests_posts.test_delete_user_post" />
-        <item itemvalue="Python tests.Python tests for tests_posts.test_get_user_id" />
         <item itemvalue="Python tests.Python tests for tests_posts.test_user_id_in_list" />
-        <item itemvalue="Python tests.Python tests for tests_posts.test_get_post_body" />
+        <item itemvalue="Python tests.Python tests for tests_posts.test_get_user_id" />
         <item itemvalue="Python tests.Python tests for tests_posts.test_get_post_title" />
+        <item itemvalue="Python tests.Python tests for tests_posts.test_get_post_body" />
+        <item itemvalue="Python tests.Python tests for tests_posts.test_delete_user_post" />
       </list>
     </recent_temporary>
   </component>
