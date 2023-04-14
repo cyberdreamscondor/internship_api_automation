@@ -1,6 +1,6 @@
 import json
 import requests
-
+import xml.etree.ElementTree as ET
 # Helper functions to fetch mock data to test functions, delete, store response records' ids &
 # retrieve it, provide json schema of a correct response.
 
@@ -12,6 +12,21 @@ def create_users_data():
     with open('../utils/jsonmodels/users_data.json', 'r') as file:
         users_data = json.load(file)
         return users_data
+
+def create_user_xml_data(name, email, gender, status):
+    root = ET.Element("user")
+    name_elem = ET.SubElement(root, "name")
+    name_elem.text = name
+    email_elem = ET.SubElement(root, "email")
+    email_elem.text = email
+    gender_elem = ET.SubElement(root, "gender")
+    gender_elem.text = gender
+    status_elem = ET.SubElement(root, "status")
+    status_elem.text = status
+    request_body = ET.tostring(root)
+
+    return request_body
+
 
 
 def delete_mock_data(app_config):
