@@ -4,6 +4,16 @@ from endpoints.users import Users
 import utils.jsonmodels.users_json as mock_data
 import jsonschema
 import xml.etree.ElementTree as ET
+import logging
+import pytest_html
+
+
+@pytest.fixture(scope="module")
+def logger():
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+    return logger
+
 
 
 class UsersTests(Users):
@@ -51,6 +61,7 @@ class UsersTests(Users):
         response_data = response.json()
         page1_users = page1.json()
         page2_users = page2.json()
+
         assert len(page1_users) == len(page2_users) and\
             len(response_data) == len(page1_users) + len(page2_users)
         assert page1_users.update(page2_users) == response_data
@@ -74,7 +85,7 @@ class UsersTests(Users):
         Simple actual/expected response comparison.
         """
         invalid_data = {
-            "email": "test_12wdf@testdsf.com",
+            "email": "tes2wdf@testdsf.com",
             "name": "5",
             "gender": "female",
             "status": "active"
@@ -82,32 +93,38 @@ class UsersTests(Users):
 
         # There's no such message, let us suppose it has to be
         # actually what is the best way? Mark as failing, raise error?
-
         expected_response = [{
             "field": "name",
             "message": "can't be a number"
         }]
+
         response = self.create_user(app_config.base_url, invalid_data, 422, app_config.token)
         assert expected_response == response.json()
 
-
-    def test_xml_create_user(self, app_config):
+    def test_xml_create_user(self, app_config, logger):
         """
         Tests whether xml data is accepted
+        Logging added, but I yet have to figure out how to use it correctly
         """
         headers = {
             **app_config.token,
-            "Content-Type": "application/xml"
+            "Content-Type": "application/xml; charset=utf-8"
         }
 
         user_data = mock_data.create_user_xml_data("Dave", "emailmeplease@fortest.com", "male", "active")
         response = self.post_request('https://gorest.co.in/public/v2/users.xml', user_data, headers=headers)
         root = ET.fromstring(response.content)
-        #ET.dump(root) prints just like you wanna see it
+        #ET.dump(root) prints as structured xml
 
-        assert response.status_code == 201
-        assert response.headers["Content-Type"] == "application/xml"
-        assert root.find("data/name").text == "Dave"
+        assert response.headers["Content-Type"] == "application/xml; charset=utf-8"
+        logger.info("Server responded with XML")
+
+        logger.info("Checking response status code")
+        assert response.status_code == 201, f"Expected 201 Code"
+
+        logger.info("Checking correctness of response data")
+        assert root.find("data/name").text == "Dave", f"Incorrect name"
+
 
 
 

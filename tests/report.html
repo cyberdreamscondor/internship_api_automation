@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>report.html</title>
+    <link href="assets/style.css" rel="stylesheet" type="text/css"/></head>
+  <body onLoad="init()">
+    <script>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+function toArray(iter) {
+    if (iter === null) {
+        return null;
+    }
+    return Array.prototype.slice.call(iter);
+}
+
+function find(selector, elem) { // eslint-disable-line no-redeclare
+    if (!elem) {
+        elem = document;
+    }
+    return elem.querySelector(selector);
+}
+
+function findAll(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return toArray(elem.querySelectorAll(selector));
+}
+
+function sortColumn(elem) {
+    toggleSortStates(elem);
+    const colIndex = toArray(elem.parentNode.childNodes).indexOf(elem);
+    let key;
+    if (elem.classList.contains('result')) {
+        key = keyResult;
+    } else if (elem.classList.contains('links')) {
+        key = keyLink;
+    } else {
+        key = keyAlpha;
+    }
+    sortTable(elem, key(colIndex));
+}
+
+function showAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(showExtras);
+}
+
+function hideAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(hideExtras);
+}
+
+function showExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.remove('collapsed');
+    expandcollapse.classList.remove('expander');
+    expandcollapse.classList.add('collapser');
+}
+
+function hideExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.add('collapsed');
+    expandcollapse.classList.remove('collapser');
+    expandcollapse.classList.add('expander');
+}
+
+function showFilters() {
+    let visibleString = getQueryParameter('visible') || 'all';
+    visibleString = visibleString.toLowerCase();
+    const checkedItems = visibleString.split(',');
+
+    const filterItems = document.getElementsByClassName('filter');
+    for (let i = 0; i < filterItems.length; i++) {
+        filterItems[i].hidden = false;
+
+        if (visibleString != 'all') {
+            filterItems[i].checked = checkedItems.includes(filterItems[i].getAttribute('data-test-result'));
+            filterTable(filterItems[i]);
+        }
+    }
+}
+
+function addCollapse() {
+    // Add links for show/hide all
+    const resulttable = find('table#results-table');
+    const showhideall = document.createElement('p');
+    showhideall.innerHTML = '<a href="javascript:showAllExtras()">Show all details</a> / ' +
+                            '<a href="javascript:hideAllExtras()">Hide all details</a>';
+    resulttable.parentElement.insertBefore(showhideall, resulttable);
+
+    // Add show/hide link to each result
+    findAll('.col-result').forEach(function(elem) {
+        const collapsed = getQueryParameter('collapsed') || 'Passed';
+        const extras = elem.parentNode.nextElementSibling;
+        const expandcollapse = document.createElement('span');
+        if (extras.classList.contains('collapsed')) {
+            expandcollapse.classList.add('expander');
+        } else if (collapsed.includes(elem.innerHTML)) {
+            extras.classList.add('collapsed');
+            expandcollapse.classList.add('expander');
+        } else {
+            expandcollapse.classList.add('collapser');
+        }
+        elem.appendChild(expandcollapse);
+
+        elem.addEventListener('click', function(event) {
+            if (event.currentTarget.parentNode.nextElementSibling.classList.contains('collapsed')) {
+                showExtras(event.currentTarget);
+            } else {
+                hideExtras(event.currentTarget);
+            }
+        });
+    });
+}
+
+function getQueryParameter(name) {
+    const match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function init () { // eslint-disable-line no-unused-vars
+    resetSortHeaders();
+
+    addCollapse();
+
+    showFilters();
+
+    sortColumn(find('.initial-sort'));
+
+    findAll('.sortable').forEach(function(elem) {
+        elem.addEventListener('click',
+            function() {
+                sortColumn(elem);
+            }, false);
+    });
+}
+
+function sortTable(clicked, keyFunc) {
+    const rows = findAll('.results-table-row');
+    const reversed = !clicked.classList.contains('asc');
+    const sortedRows = sort(rows, keyFunc, reversed);
+    /* Whole table is removed here because browsers acts much slower
+     * when appending existing elements.
+     */
+    const thead = document.getElementById('results-table-head');
+    document.getElementById('results-table').remove();
+    const parent = document.createElement('table');
+    parent.id = 'results-table';
+    parent.appendChild(thead);
+    sortedRows.forEach(function(elem) {
+        parent.appendChild(elem);
+    });
+    document.getElementsByTagName('BODY')[0].appendChild(parent);
+}
+
+function sort(items, keyFunc, reversed) {
+    const sortArray = items.map(function(item, i) {
+        return [keyFunc(item), i];
+    });
+
+    sortArray.sort(function(a, b) {
+        const keyA = a[0];
+        const keyB = b[0];
+
+        if (keyA == keyB) return 0;
+
+        if (reversed) {
+            return keyA < keyB ? 1 : -1;
+        } else {
+            return keyA > keyB ? 1 : -1;
+        }
+    });
+
+    return sortArray.map(function(item) {
+        const index = item[1];
+        return items[index];
+    });
+}
+
+function keyAlpha(colIndex) {
+    return function(elem) {
+        return elem.childNodes[1].childNodes[colIndex].firstChild.data.toLowerCase();
+    };
+}
+
+function keyLink(colIndex) {
+    return function(elem) {
+        const dataCell = elem.childNodes[1].childNodes[colIndex].firstChild;
+        return dataCell == null ? '' : dataCell.innerText.toLowerCase();
+    };
+}
+
+function keyResult(colIndex) {
+    return function(elem) {
+        const strings = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed',
+            'Skipped', 'Passed'];
+        return strings.indexOf(elem.childNodes[1].childNodes[colIndex].firstChild.data);
+    };
+}
+
+function resetSortHeaders() {
+    findAll('.sort-icon').forEach(function(elem) {
+        elem.parentNode.removeChild(elem);
+    });
+    findAll('.sortable').forEach(function(elem) {
+        const icon = document.createElement('div');
+        icon.className = 'sort-icon';
+        icon.textContent = 'vvv';
+        elem.insertBefore(icon, elem.firstChild);
+        elem.classList.remove('desc', 'active');
+        elem.classList.add('asc', 'inactive');
+    });
+}
+
+function toggleSortStates(elem) {
+    //if active, toggle between asc and desc
+    if (elem.classList.contains('active')) {
+        elem.classList.toggle('asc');
+        elem.classList.toggle('desc');
+    }
+
+    //if inactive, reset all other functions and add ascending active
+    if (elem.classList.contains('inactive')) {
+        resetSortHeaders();
+        elem.classList.remove('inactive');
+        elem.classList.add('active');
+    }
+}
+
+function isAllRowsHidden(value) {
+    return value.hidden == false;
+}
+
+function filterTable(elem) { // eslint-disable-line no-unused-vars
+    const outcomeAtt = 'data-test-result';
+    const outcome = elem.getAttribute(outcomeAtt);
+    const classOutcome = outcome + ' results-table-row';
+    const outcomeRows = document.getElementsByClassName(classOutcome);
+
+    for(let i = 0; i < outcomeRows.length; i++){
+        outcomeRows[i].hidden = !elem.checked;
+    }
+
+    const rows = findAll('.results-table-row').filter(isAllRowsHidden);
+    const allRowsHidden = rows.length == 0 ? true : false;
+    const notFoundMessage = document.getElementById('not-found-message');
+    notFoundMessage.hidden = !allRowsHidden;
+}
+</script>
+    <h1>report.html</h1>
+    <p>Report generated on 14-Apr-2023 at 19:44:42 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.2.0</p>
+    <h2>Environment</h2>
+    <table id="environment">
+      <tr>
+        <td>Packages</td>
+        <td>{"pluggy": "1.0.0", "pytest": "7.2.2"}</td></tr>
+      <tr>
+        <td>Platform</td>
+        <td>Windows-10-10.0.22000-SP0</td></tr>
+      <tr>
+        <td>Plugins</td>
+        <td>{"html": "3.2.0", "metadata": "2.0.4"}</td></tr>
+      <tr>
+        <td>Python</td>
+        <td>3.11.1</td></tr></table>
+    <h2>Summary</h2>
+    <p>12 tests ran in 19.09 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">4 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">8 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <h2>Results</h2>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable result initial-sort" col="result">Result</th>
+          <th class="sortable" col="name">Test</th>
+          <th class="sortable" col="duration">Duration</th>
+          <th class="sortable links" col="links">Links</th></tr>
+        <tr hidden="true" id="not-found-message">
+          <th colspan="4">No results found. Try to check the filters</th></tr></thead>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">tests/tests_posts.py::test_get_user_id</td>
+          <td class="col-duration">0.38</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">app_config = &lt;config.Config object at 0x000001F197EE0D50&gt;<br/><br/>    def test_get_user_id(app_config):<br/>        user_id = &quot;938855&quot;<br/>        json = posts_json.create_post_json(int(user_id), &quot;New project&quot;, &quot;New post&quot;)<br/>&gt;       posts.create_post(app_config.base_url, 201, json)<br/><br/>tests_posts.py:16: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/>..\endpoints\posts.py:31: in create_post<br/>    self.check_status_code(response, expected_status_code)<br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>self = &lt;endpoints.posts.Posts object at 0x000001F199A91C10&gt;, response = &lt;Response [422]&gt;, expected_status_code = 201<br/><br/>    def check_status_code(self, response, expected_status_code):<br/>        &quot;&quot;&quot;<br/>        Use this method to check the response status code<br/>        :param response: response<br/>        :param expected_status_code: expected status code<br/>        &quot;&quot;&quot;<br/>&gt;       assert response.status_code == expected_status_code<br/><span class="error">E       AssertionError</span><br/><br/>..\base\base_api.py:57: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">tests/tests_posts.py::test_get_post_title</td>
+          <td class="col-duration">0.37</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">app_config = &lt;config.Config object at 0x000001F197EE0D50&gt;<br/><br/>    def test_get_post_title(app_config):<br/>        user_id = &quot;936238&quot;<br/>        title = &quot;New project&quot;<br/>        json = posts_json.create_post_json(int(user_id), title, &quot;New post&quot;)<br/>&gt;       posts.create_post(app_config.base_url, 201, json)<br/><br/>tests_posts.py:27: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/>..\endpoints\posts.py:31: in create_post<br/>    self.check_status_code(response, expected_status_code)<br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>self = &lt;endpoints.posts.Posts object at 0x000001F199A91C10&gt;, response = &lt;Response [422]&gt;, expected_status_code = 201<br/><br/>    def check_status_code(self, response, expected_status_code):<br/>        &quot;&quot;&quot;<br/>        Use this method to check the response status code<br/>        :param response: response<br/>        :param expected_status_code: expected status code<br/>        &quot;&quot;&quot;<br/>&gt;       assert response.status_code == expected_status_code<br/><span class="error">E       AssertionError</span><br/><br/>..\base\base_api.py:57: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">tests/tests_posts.py::test_get_post_body</td>
+          <td class="col-duration">0.37</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">app_config = &lt;config.Config object at 0x000001F197EE0D50&gt;<br/><br/>    def test_get_post_body(app_config):<br/>        user_id = &quot;939307&quot;<br/>        body = &quot;New body&quot;<br/>        json = posts_json.create_post_json(int(user_id), &quot;The best title&quot;, body)<br/>&gt;       posts.create_post(app_config.base_url, 201, json)<br/><br/>tests_posts.py:38: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/>..\endpoints\posts.py:31: in create_post<br/>    self.check_status_code(response, expected_status_code)<br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>self = &lt;endpoints.posts.Posts object at 0x000001F199A91C10&gt;, response = &lt;Response [422]&gt;, expected_status_code = 201<br/><br/>    def check_status_code(self, response, expected_status_code):<br/>        &quot;&quot;&quot;<br/>        Use this method to check the response status code<br/>        :param response: response<br/>        :param expected_status_code: expected status code<br/>        &quot;&quot;&quot;<br/>&gt;       assert response.status_code == expected_status_code<br/><span class="error">E       AssertionError</span><br/><br/>..\base\base_api.py:57: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">tests/tests_posts.py::test_user_id_in_list</td>
+          <td class="col-duration">0.38</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">app_config = &lt;config.Config object at 0x000001F197EE0D50&gt;<br/><br/>    def test_user_id_in_list(app_config):<br/>        user_id = &quot;936653&quot;<br/>        json = posts_json.create_post_json(int(user_id), &quot;New project&quot;, &quot;New post&quot;)<br/>&gt;       posts.create_post(app_config.base_url, 201, json)<br/><br/>tests_posts.py:48: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/>..\endpoints\posts.py:31: in create_post<br/>    self.check_status_code(response, expected_status_code)<br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>self = &lt;endpoints.posts.Posts object at 0x000001F199A91C10&gt;, response = &lt;Response [422]&gt;, expected_status_code = 201<br/><br/>    def check_status_code(self, response, expected_status_code):<br/>        &quot;&quot;&quot;<br/>        Use this method to check the response status code<br/>        :param response: response<br/>        :param expected_status_code: expected status code<br/>        &quot;&quot;&quot;<br/>&gt;       assert response.status_code == expected_status_code<br/><span class="error">E       AssertionError</span><br/><br/>..\base\base_api.py:57: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">tests/tests_posts.py::test_delete_user_post</td>
+          <td class="col-duration">0.38</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">app_config = &lt;config.Config object at 0x000001F197EE0D50&gt;<br/><br/>    def test_delete_user_post(app_config):<br/>        user_id = &quot;941127&quot;<br/>        json = posts_json.create_post_json(int(user_id), &quot;New project&quot;, &quot;New post&quot;)<br/>&gt;       posts.create_post(app_config.base_url, 201, json)<br/><br/>tests_posts.py:62: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/>..\endpoints\posts.py:31: in create_post<br/>    self.check_status_code(response, expected_status_code)<br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>self = &lt;endpoints.posts.Posts object at 0x000001F199A91C10&gt;, response = &lt;Response [422]&gt;, expected_status_code = 201<br/><br/>    def check_status_code(self, response, expected_status_code):<br/>        &quot;&quot;&quot;<br/>        Use this method to check the response status code<br/>        :param response: response<br/>        :param expected_status_code: expected status code<br/>        &quot;&quot;&quot;<br/>&gt;       assert response.status_code == expected_status_code<br/><span class="error">E       AssertionError</span><br/><br/>..\base\base_api.py:57: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">tests/tests_users.py::UsersTests::test_pagination</td>
+          <td class="col-duration">1.27</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;tests.tests_users.UsersTests object at 0x000001F19A3DA290&gt;, app_config = &lt;config.Config object at 0x000001F197EE0D50&gt;<br/><br/>    def test_pagination(self, app_config):<br/>        &quot;&quot;&quot;<br/>        Set a limit of 5 records per page. API default is 10.<br/>        Checks 2 pages of user records to contain exactly 5 records<br/>        and that a default page of 10 records&#x27; data doesn&#x27;t differ from<br/>        these 2 pages.<br/>        &quot;&quot;&quot;<br/>        response = self.get_users(app_config.base_url, 200, app_config.token)<br/>        page1 = self.get_users(app_config.base_url, 200, app_config.token, page=1, limit=5)<br/>        page2 = self.get_users(app_config.base_url, 200, app_config.token, page=2, limit=5)<br/>        response_data = response.json()<br/>        page1_users = page1.json()<br/>        page2_users = page2.json()<br/>    <br/>&gt;       assert len(page1_users) == len(page2_users) and\<br/>            len(response_data) == len(page1_users) + len(page2_users)<br/><span class="error">E       AssertionError: assert (10 == 10 and 10 == (10 + 10))</span><br/><span class="error">E        +  where 10 = len([{&#x27;email&#x27;: &#x27;atehdfgffst_user_10@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978589, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;ateddfffst_user_9@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978588, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atefgfffgdft_user_8@example.com&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 978587, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atbfdgdftf_user_7@example.com&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 978586, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atgffgdffdfst_user_6@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978585, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atesggdfsddft_user_5@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978584, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, ...])</span><br/><span class="error">E        +  and   10 = len([{&#x27;email&#x27;: &#x27;tes2wdf@testdsf.com&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 977640, &#x27;name&#x27;: &#x27;5&#x27;, ...}, {&#x27;email&#x27;: &#x27;test_12wdf@testdsf.com&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 977444, &#x27;name&#x27;: &#x27;5&#x27;, ...}, {&#x27;email&#x27;: &#x27;laal_esq_ahuja@kulas.biz&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 976215, &#x27;name&#x27;: &#x27;Laal Ahuja Esq.&#x27;, ...}, {&#x27;email&#x27;: &#x27;bhattathiri_aasa@rolfson.io&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 975520, &#x27;name&#x27;: &#x27;Aasa Bhattathiri&#x27;, ...}, {&#x27;email&#x27;: &#x27;deshpande_anagh@abernathy.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 975519, &#x27;name&#x27;: &#x27;Anagh Deshpande&#x27;, ...}, {&#x27;email&#x27;: &#x27;gajbaahu_mukhopadhyay@sawayn.name&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 975514, &#x27;name&#x27;: &#x27;Gajbaahu Mukhopadhyay&#x27;, ...}, ...])</span><br/><span class="error">E        +  and   10 = len([{&#x27;email&#x27;: &#x27;atehdfgffst_user_10@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978589, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;ateddfffst_user_9@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978588, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atefgfffgdft_user_8@example.com&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 978587, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atbfdgdftf_user_7@example.com&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 978586, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atgffgdffdfst_user_6@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978585, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atesggdfsddft_user_5@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978584, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, ...])</span><br/><span class="error">E        +  and   10 = len([{&#x27;email&#x27;: &#x27;atehdfgffst_user_10@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978589, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;ateddfffst_user_9@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978588, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atefgfffgdft_user_8@example.com&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 978587, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atbfdgdftf_user_7@example.com&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 978586, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atgffgdffdfst_user_6@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978585, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, {&#x27;email&#x27;: &#x27;atesggdfsddft_user_5@example.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 978584, &#x27;name&#x27;: &#x27;TestUser&#x27;, ...}, ...])</span><br/><span class="error">E        +  and   10 = len([{&#x27;email&#x27;: &#x27;tes2wdf@testdsf.com&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 977640, &#x27;name&#x27;: &#x27;5&#x27;, ...}, {&#x27;email&#x27;: &#x27;test_12wdf@testdsf.com&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 977444, &#x27;name&#x27;: &#x27;5&#x27;, ...}, {&#x27;email&#x27;: &#x27;laal_esq_ahuja@kulas.biz&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 976215, &#x27;name&#x27;: &#x27;Laal Ahuja Esq.&#x27;, ...}, {&#x27;email&#x27;: &#x27;bhattathiri_aasa@rolfson.io&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 975520, &#x27;name&#x27;: &#x27;Aasa Bhattathiri&#x27;, ...}, {&#x27;email&#x27;: &#x27;deshpande_anagh@abernathy.com&#x27;, &#x27;gender&#x27;: &#x27;male&#x27;, &#x27;id&#x27;: 975519, &#x27;name&#x27;: &#x27;Anagh Deshpande&#x27;, ...}, {&#x27;email&#x27;: &#x27;gajbaahu_mukhopadhyay@sawayn.name&#x27;, &#x27;gender&#x27;: &#x27;female&#x27;, &#x27;id&#x27;: 975514, &#x27;name&#x27;: &#x27;Gajbaahu Mukhopadhyay&#x27;, ...}, ...])</span><br/><br/>tests_users.py:65: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">tests/tests_users.py::UsersTests::test_invalid_create_user</td>
+          <td class="col-duration">0.39</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;tests.tests_users.UsersTests object at 0x000001F19A3DB150&gt;, app_config = &lt;config.Config object at 0x000001F197EE0D50&gt;<br/><br/>    def test_invalid_create_user(self, app_config):<br/>        &quot;&quot;&quot;<br/>        POST user with invalid data.<br/>        Simple actual/expected response comparison.<br/>        &quot;&quot;&quot;<br/>        invalid_data = {<br/>            &quot;email&quot;: &quot;tes2wdf@testdsf.com&quot;,<br/>            &quot;name&quot;: &quot;5&quot;,<br/>            &quot;gender&quot;: &quot;female&quot;,<br/>            &quot;status&quot;: &quot;active&quot;<br/>        }<br/>    <br/>        # There&#x27;s no such message, let us suppose it has to be<br/>        # actually what is the best way? Mark as failing, raise error?<br/>        expected_response = [{<br/>            &quot;field&quot;: &quot;name&quot;,<br/>            &quot;message&quot;: &quot;can&#x27;t be a number&quot;<br/>        }]<br/>    <br/>        response = self.create_user(app_config.base_url, invalid_data, 422, app_config.token)<br/>&gt;       assert expected_response == response.json()<br/><span class="error">E       assert [{&#x27;field&#x27;: &#x27;n...be a number&quot;}] == [{&#x27;field&#x27;: &#x27;e... been taken&#x27;}]</span><br/><span class="error">E         At index 0 diff: {&#x27;field&#x27;: &#x27;name&#x27;, &#x27;message&#x27;: &quot;can&#x27;t be a number&quot;} != {&#x27;field&#x27;: &#x27;email&#x27;, &#x27;message&#x27;: &#x27;has already been taken&#x27;}</span><br/><span class="error">E         Full diff:</span><br/><span class="error">E         - [{&#x27;field&#x27;: &#x27;email&#x27;, &#x27;message&#x27;: &#x27;has already been taken&#x27;}]</span><br/><span class="error">E         + [{&#x27;field&#x27;: &#x27;name&#x27;, &#x27;message&#x27;: &quot;can&#x27;t be a number&quot;}]</span><br/><br/>tests_users.py:102: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">tests/tests_users.py::UsersTests::test_xml_create_user</td>
+          <td class="col-duration">0.40</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">self = &lt;tests.tests_users.UsersTests object at 0x000001F19A3DB890&gt;, app_config = &lt;config.Config object at 0x000001F197EE0D50&gt;, logger = &lt;Logger tests.tests_users (INFO)&gt;<br/><br/>    def test_xml_create_user(self, app_config, logger):<br/>        &quot;&quot;&quot;<br/>        Tests whether xml data is accepted<br/>        Logging added, but I yet have to figure out how to use it correctly<br/>        &quot;&quot;&quot;<br/>        headers = {<br/>            **app_config.token,<br/>            &quot;Content-Type&quot;: &quot;application/xml; charset=utf-8&quot;<br/>        }<br/>    <br/>        user_data = mock_data.create_user_xml_data(&quot;Dave&quot;, &quot;emailmeplease@fortest.com&quot;, &quot;male&quot;, &quot;active&quot;)<br/>        response = self.post_request(&#x27;https://gorest.co.in/public/v2/users.xml&#x27;, user_data, headers=headers)<br/>        root = ET.fromstring(response.content)<br/>        #ET.dump(root) prints as structured xml<br/>    <br/>        assert response.headers[&quot;Content-Type&quot;] == &quot;application/xml; charset=utf-8&quot;<br/>        logger.info(&quot;Server responded with XML&quot;)<br/>    <br/>        logger.info(&quot;Checking response status code&quot;)<br/>&gt;       assert response.status_code == 201, f&quot;Expected 201 Code&quot;<br/><span class="error">E       AssertionError: Expected 201 Code</span><br/><span class="error">E       assert 422 == 201</span><br/><span class="error">E        +  where 422 = &lt;Response [422]&gt;.status_code</span><br/><br/>tests_users.py:123: AssertionError<br/> -------------------------------Captured log call-------------------------------- <br/>INFO     tests.tests_users:tests_users.py:120 Server responded with XML
+INFO     tests.tests_users:tests_users.py:122 Checking response status code<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/tests_posts.py::test_get_posts</td>
+          <td class="col-duration">0.52</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/tests_users.py::UsersTests::test_create_user</td>
+          <td class="col-duration">9.35</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/tests_users.py::UsersTests::test_get_user</td>
+          <td class="col-duration">3.98</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/tests_users.py::UsersTests::test_update_user</td>
+          <td class="col-duration">0.79</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody></table></body></html>

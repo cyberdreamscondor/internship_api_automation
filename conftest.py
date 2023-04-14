@@ -1,6 +1,6 @@
 import pytest
 from config import Config
-
+import logging
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -21,4 +21,6 @@ def env(request):
 def app_config(env):
     conf = Config(env)
     return conf
+
+
 
